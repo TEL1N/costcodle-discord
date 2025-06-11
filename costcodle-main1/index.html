@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSTCODLE</title>
+    
+    <style>
+        /* Embedded animate.css animations */
+        @keyframes flipInX {
+            from {
+                transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+                animation-timing-function: ease-in;
+                opacity: 0;
+            }
+            40% {
+                transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+                animation-timing-function: ease-in;
+            }
+            60% {
+                transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
+                opacity: 1;
+            }
+            80% {
+                transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
+            }
+            to {
+                transform: perspective(400px);
+            }
+        }
+
+        @keyframes flipOutX {
+            from {
+                transform: perspective(400px);
+            }
+            30% {
+                transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+                opacity: 1;
+            }
+            to {
+                transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes headShake {
+            0% {
+                transform: translateX(0);
+            }
+            6.5% {
+                transform: translateX(-6px) rotateY(-9deg);
+            }
+            18.5% {
+                transform: translateX(5px) rotateY(7deg);
+            }
+            31.5% {
+                transform: translateX(-3px) rotateY(-5deg);
+            }
+            43.5% {
+                transform: translateX(2px) rotateY(3deg);
+            }
+            50% {
+                transform: translateX(0);
+            }
+        }
+
+        .animate__animated {
+            animation-duration: 1s;
+            animation-fill-mode: both;
+        }
+
+        .animate__flipInX {
+            backface-visibility: visible !important;
+            animation-name: flipInX;
+        }
+
+        .animate__flipOutX {
+            animation-duration: 0.75s;
+            animation-name: flipOutX;
+        }
+
+        .animate__headShake {
+            animation-timing-function: ease-in-out;
+            animation-name: headShake;
+        }
+
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        body {
+            font-family: "VT323", monospace;
+            font-size: 30px;
+            background-color: gainsboro;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        a {
+            color: black;
+        }
+
+        h3 {
+            font-weight: normal;
+            margin-bottom: 6px;
+        }
+
+        ul {
+            margin-left: 1rem;
+        }
+
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        .costco-red {
+            color: rgb(227, 42, 54);
+        }
+
+        .costco-blue {
+            color: rgb(0, 96, 169);
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        .transparent-background {
+            background-color: transparent;
+            box-shadow: none;
+        }
+
+        #main-page {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #site-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: gainsboro;
+        }
+
+        #header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 344px;
+            border-bottom: 2px solid gray;
+        }
+
+        .title {
+            font-size: 60px;
+        }
+
+        .info-title {
+            font-size: 52px;
+        }
+
+        #info-button {
+            font-family: "VT323", monospace;
+            font-size: 55px;
+            width: 30px;
+            height: 60px;
+            cursor: pointer;
+            color: black;
+            border: none;
+            background: none;
+        }
+
+        #stat-button {
+            font-size: 30px;
+            width: 30px;
+            height: 60px;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        #site-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 2px solid gray;
+            background-color: gainsboro;
+        }
+
+        #database-link {
+            margin-left: 12px;
+        }
+
+        #dev-name {
+            margin-right: 12px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #a8bbbf;
+        }
+
+        /* Game Styles */
+        #game-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: start;
+            background-color: gainsboro;
+        }
+
+        #info-card {
+            display: flex;
+            overflow: hidden;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 36px;
+            margin-bottom: 24px;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: rgb(173, 173, 173);
+            box-shadow: 0 3px 10px;
+        }
+
+        #image-container {
+            display: flex;
+            overflow: hidden;
+            justify-content: center;
+            width: 300px;
+            height: 300px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background-color: white;
+        }
+
+        #product-image {
+            height: 100%;
+        }
+
+        #product-info {
+            font-size: 24px;
+            width: 300px;
+        }
+
+        #game-stats {
+            margin-bottom: 12px;
+        }
+
+        #guesses-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            width: 324px;
+            height: 275px;
+            padding: 3px;
+            border-radius: 8px;
+            background-color: transparent;
+        }
+
+        .guess-container {
+            display: flex;
+            overflow: hidden;
+            flex: 1;
+            flex-direction: row;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            background-color: gray;
+            box-shadow: inset 0 0 5px;
+        }
+
+        .guess-value-container {
+            font-size: 28px;
+            display: flex;
+            overflow: hidden;
+            align-items: center;
+            flex: 2;
+            justify-content: center;
+            border-radius: 8px;
+            background-color: gray;
+            box-shadow: inset 0 0 5px;
+        }
+
+        #text-input-container {
+            font-size: 28px;
+            display: flex;
+            overflow: hidden;
+            align-items: center;
+            flex: 2;
+            justify-content: center;
+            border: 1px solid black;
+            border-radius: 8px;
+            background-color: gray;
+        }
+
+        .guess-value-container,
+        .guess-direction-container {
+            animation: flipInX;
+            animation-duration: 1s;
+        }
+
+        .guess-direction-container,
+        #button-container {
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            overflow: hidden;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+            margin-left: 5px;
+            color: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            box-shadow: inset 0 0 5px;
+        }
+
+        .guess-win {
+            background-color: rgb(1, 154, 1);
+        }
+
+        .guess-near {
+            background-color: rgb(255, 196, 37);
+        }
+
+        .guess-far {
+            background-color: rgb(255, 37, 37);
+        }
+
+        #warning-toast {
+            position: absolute;
+            z-index: 1;
+            top: 50px;
+            left: 52px;
+            font-size: 24px;
+            width: 220px;
+            padding: 18px;
+            color: white;
+            border-radius: 8px;
+            background-color: rgb(0, 0, 0);
+        }
+
+        #input-label {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+            height: 40px;
+            border-right: 2px solid black;
+            background-color: rgb(173, 173, 173);
+        }
+
+        #guess-input {
+            font-family: "VT323", monospace;
+            font-size: 24px;
+            width: 180px;
+            height: 40px;
+            padding-left: 6px;
+            color: gainsboro;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            background-color: rgb(94, 94, 94);
+        }
+
+        #guess-input::placeholder {
+            font-size: 24px;
+            color: gainsboro;
+        }
+
+        #guess-button {
+            font-family: "VT323", monospace;
+            font-size: 24px;
+            width: 100%;
+            height: 100%;
+            color: rgb(227, 42, 54);
+            border: none;
+            background-color: rgb(173, 173, 173);
+        }
+
+        #guess-button.active:hover {
+            cursor: pointer;
+            background-color: rgba(0, 96, 169, 0.5);
+        }
+
+        #share-button {
+            width: 100%;
+            font-size: 28px;
+            font-family: "VT323", monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: none;
+            border-radius: 32px;
+            background-color: rgb(227, 42, 54);
+            cursor: pointer;
+        }
+
+        #share-button:hover {
+            background-color: rgba(227, 42, 54, 0.8);
+        }
+
+        .share-icon {
+            height: 24px;
+            width: 24px;
+            margin-left: 10px;
+            filter: invert(1);
+        }
+
+        #share-toast {
+            position: absolute;
+            top: 16px;
+            z-index: 1;
+            width: 300px;
+            padding: 18px;
+            font-size: 24px;
+            color: white;
+            border-radius: 8px;
+            background-color: rgb(0, 0, 0);
+        }
+
+        /* Overlay Styles */
+        .overlay {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: start;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: gainsboro;
+        }
+
+        .overlay-body {
+            overflow-y: auto;
+            width: 350px;
+            height: 100%;
+            padding: 0 6px;
+        }
+
+        #info-body {
+            font-size: 20px;
+        }
+
+        .info-section {
+            margin-top: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid gray;
+        }
+
+        #stat-body {
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            background-color: gainsboro;
+        }
+
+        #statistics-title {
+            margin-bottom: 24px;
+        }
+
+        #statistics {
+            display: flex;
+            justify-content: space-evenly;
+            width: 100%;
+            margin-bottom: 32px;
+        }
+
+        .statistic {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .stat {
+            font-size: 66px;
+        }
+
+        .descriptor {
+            font-size: 22px;
+        }
+
+        .graph {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        .graph-label {
+            margin-right: 6px;
+        }
+
+        .graphElem {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            -webkit-justify-content: flex-end;
+            justify-content: end;
+            padding-right: 4px;
+            color: white;
+            background-color: rgb(0, 96, 169);
+        }
+
+        .graph-row {
+            display: flex;
+            align-items: center;
+            height: 26px;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-height: 900px) {
+            #image-container {
+                width: 275px;
+                height: 275px;
+            }
+            #product-info {
+                width: 275px;
+            }
+        }
+
+        @media screen and (max-height: 850px) {
+            #image-container {
+                width: 250px;
+                height: 250px;
+            }
+            #product-info {
+                width: 250px;
+            }
+        }
+
+        @media screen and (max-height: 825px) {
+            #image-container {
+                width: 225px;
+                height: 225px;
+            }
+            #product-info {
+                width: 225px;
+            }
+            #site-footer {
+                font-size: 24px;
+            }
+            #game-stats {
+                font-size: 24px;
+            }
+        }
+
+        @media screen and (max-height: 785px) {
+            #image-container {
+                width: 200px;
+                height: 200px;
+            }
+            #product-info {
+                width: 200px;
+            }
+        }
+
+        @media screen and (max-height: 760px) {
+            #image-container {
+                height: 175px;
+            }
+            #product-image {
+                height: 175px;
+            }
+            #product-info {
+                font-size: 20px;
+            }
+        }
+
+        @media screen and (max-height: 725px) {
+            #image-container {
+                height: 150px;
+            }
+        }
+
+        @media screen and (max-height: 700px) {
+            #image-container {
+                height: 125px;
+            }
+        }
+
+        @media screen and (max-height: 675px) {
+            #info-card {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main-page">
+        <header id="site-header">
+            <div id="header-container">
+                <button id="info-button" data-overlay="info-overlay" type="button">
+                    ?
+                </button>
+                <h1 id="title" class="title costco-red">
+                    <center>COSTCO<span class="costco-blue">DLE</span></center>
+                </h1>
+                <button id="stat-button" data-overlay="stats-overlay" type="button">
+                    <svg width="30" height="30" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect y="100" width="50" height="100" fill="black"/>
+                        <rect x="75" y="50" width="50" height="150" fill="black"/>
+                        <rect x="150" width="50" height="200" fill="black"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <main id="game-container">
+            <div id="share-toast" class="animate__animated hide">
+                <center>Results copied to clipboard</center>
+            </div>
+            <div id="info-card" class="animate__animated">
+                <div id="image-container"></div>
+                <div id="product-info"></div>
+            </div>
+            <div id="game-stats"></div>
+            <div id="guesses-container">
+                <div id="warning-toast" class="animate__animated hide">
+                    <center>Invalid Guess ⚠️</center>
+                </div>
+                <div id="1" class="guess-container"></div>
+                <div id="2" class="guess-container"></div>
+                <div id="3" class="guess-container"></div>
+                <div id="4" class="guess-container"></div>
+                <div id="5" class="guess-container"></div>
+                <div id="6" class="guess-container"></div>
+                <div id="input-container" class="guess-container transparent-background">
+                    <div id="text-input-container">
+                        <div id="input-label">$</div>
+                        <input
+                            id="guess-input"
+                            type="text"
+                            pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+                            data-type="currency"
+                            placeholder="Enter a guess..."
+                        />
+                    </div>
+                    <div id="button-container">
+                        <button id="guess-button" class="active">SUBMIT</button>
+                    </div>
+                </div>
+            </div>
+            <div id="info-overlay" class="overlay" style="display: none">
+                <div id="info-body" class="overlay-body">
+                    <div class="info-section">
+                        <h3><u>The game</u></h3>
+                        <p>
+                            Guess the <span class="costco-red">COSTCO</span><span class="costco-blue">DLE</span> in 6 tries.
+                        </p>
+                        <br />
+                        <ul style="list-style-type: square">
+                            <li>Each guess must be a valid price.</li>
+                            <li>
+                                Incorrect guesses will help guide you to the target price.
+                            </li>
+                        </ul>
+                        <br />
+                        <p>If you guess within 5% of the target price, you win!</p>
+                        <br />
+                        <p>
+                            A new <span class="costco-red">COSTCO</span><span class="costco-blue">DLE</span> is available every day!
+                        </p>
+                    </div>
+                    <div class="info-section">
+                        <h3><u>Examples</u></h3>
+                        <div class="guess-container transparent-background">
+                            <div class="guess-value-container animate__flipInX">$10.00</div>
+                            <div class="guess-direction-container animate__flipInX guess-far">
+                                ↑
+                            </div>
+                        </div>
+                        <p>
+                            First guess of $10.00 is low by more than 25% of the target
+                            price.
+                        </p>
+                        <br />
+                        <div class="guess-container transparent-background">
+                            <div class="guess-value-container animate__flipInX">$18.00</div>
+                            <div class="guess-direction-container animate__flipInX guess-near">
+                                ↓
+                            </div>
+                        </div>
+                        <p>
+                            Next guess of $18.00 is too high but within 25% of the target
+                            price.
+                        </p>
+                        <br />
+                        <div class="guess-container transparent-background">
+                            <div class="guess-value-container animate__flipInX">$16.00</div>
+                            <div class="guess-direction-container animate__flipInX guess-win">
+                                ✓
+                            </div>
+                        </div>
+                        <p>
+                            The guess of $16.00 was within 5% of the target price! You win!
+                        </p>
+                    </div>
+                    <div class="info-section">
+                        <p>
+                            If you would like to support my work, you can
+                            <a href="https://www.buymeacoffee.com/kerm" target="_blank" rel="noopener noreferrer">buy me a coffee!<span style="font-size: 14px">☕</span></a>
+                        </p>
+                    </div>
+                    <div class="info-section">
+                        <p>
+                            Source code available on my
+                            <a href="https://github.com/KermWasTaken" target="_blank" rel="noopener noreferrer">GitHub</a>!
+                        </p>
+                        <p>
+                            Suggestions? Find a bug?
+                            <a href="mailto: costcodle@gmail.com">Let me know!</a>
+                        </p>
+                    </div>
+                    <div class="info-section">
+                        <p>
+                            Special thanks to
+                            <a href="https://oec.world/en/tradle/" target="_blank" rel="noopener noreferrer">
+                                <span style="color: rgb(255, 166, 63)">TRAD</span>LE</a>
+                            and
+                            <a href="https://www.nytimes.com/games/wordle/index.html" target="_blank" rel="noopener noreferrer">Wordle</a>
+                            for inspiring <span class="costco-red">COSTCO</span><span class="costco-blue">DLE</span>!
+                        </p>
+                        <br />
+                        <p>And thank you for checking out my game!</p>
+                    </div>
+                    <div style="margin-top: 8px">
+                        <p>
+                            Created by
+                            <a href="https://github.com/KermWasTaken" target="_blank" rel="noopener noreferrer">@Kerm</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="stats-overlay" class="overlay" style="display: none">
+                <div id="stat-body" class="overlay-body">
+                    <p id="statistics-title">STATISTICS</p>
+                    <div id="statistics">
+                        <div class="statistic">
+                            <div id="number-wins" class="stat"></div>
+                            <div class="descriptor">Played</div>
+                        </div>
+                        <div class="statistic">
+                            <div id="win-percent" class="stat"></div>
+                            <div class="descriptor">Win %</div>
+                        </div>
+                        <div class="statistic">
+                            <div id="current-streak" class="stat"></div>
+                            <div class="descriptor">
+                                <center>Current<br />Streak</center>
+                            </div>
+                        </div>
+                        <div class="statistic">
+                            <div id="max-streak" class="stat"></div>
+                            <div class="descriptor">
+                                <center>Max<br />Streak</center>
+                            </div>
+                        </div>
+                    </div>
+                    <p>GUESS DISTRIBUTION</p>
+                    <div class="graph">
+                        <div class="graph-row">
+                            <div class="graph-label">1</div>
+                            <div id="graph-1" class="graphElem"></div>
+                        </div>
+                        <div class="graph-row">
+                            <div class="graph-label">2</div>
+                            <div id="graph-2" class="graphElem"></div>
+                        </div>
+                        <div class="graph-row">
+                            <div class="graph-label">3</div>
+                            <div id="graph-3" class="graphElem"></div>
+                        </div>
+                        <div class="graph-row">
+                            <div class="graph-label">4</div>
+                            <div id="graph-4" class="graphElem"></div>
+                        </div>
+                        <div class="graph-row">
+                            <div class="graph-label">5</div>
+                            <div id="graph-5" class="graphElem"></div>
+                        </div>
+                        <div class="graph-row">
+                            <div class="graph-label">6</div>
+                            <div id="graph-6" class="graphElem"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer id="site-footer">
+            <div id="database-link">
+                <a href="https://costcofdb.com/food-database" target="_blank" rel="noopener noreferrer">Costco Food Database</a>
+            </div>
+            <div id="dev-name">&copy;Kerm</div>
+        </footer>
+    </div>
+
+    <script>
+        // Embedded game data
+        const gameDatabase = {
+            "game-1": { name: "Kirkland Signature Organic Quinoa, 4.5 lbs", price: "$12.99", image: "quinoa.jpg" },
+            "game-2": { name: "Kirkland Signature Mixed Nuts, 2.5 lbs", price: "$15.49", image: "mixed-nuts.jpg" },
+            "game-3": { name: "Kirkland Signature Olive Oil, 2L", price: "$18.99", image: "olive-oil.jpg" },
+            "game-4": { name: "Kirkland Signature Almond Butter, 27 oz", price: "$9.99", image: "almond-butter.jpg" },
+            "game-5": { name: "Kirkland Signature Organic Coconut Oil, 84 oz", price: "$19.99", image: "coconut-oil.jpg" },
+            "game-6": { name: "Kirkland Signature Greek Yogurt, 32 oz", price: "$6.99", image: "greek-yogurt.jpg" },
+            "game-7": { name: "Kirkland Signature Honey, 3 lbs", price: "$11.99", image: "honey.jpg" },
+            "game-8": { name: "Kirkland Signature Peanut Butter, 28 oz", price: "$8.49", image: "peanut-butter.jpg" },
+            "game-9": { name: "Kirkland Signature Pasta Sauce, 25 oz", price: "$3.99", image: "pasta-sauce.jpg" },
+            "game-10": { name: "Kirkland Signature Granola Bars, 20 ct", price: "$13.99", image: "granola-bars.jpg" },
+            "game-11": { name: "Kirkland Signature Trail Mix, 4 lbs", price: "$16.99", image: "trail-mix.jpg" },
+            "game-12": { name: "Kirkland Signature Vitamin D3, 600 tablets", price: "$7.99", image: "vitamin-d.jpg" },
+            "game-13": { name: "Kirkland Signature Baby Wipes, 900 ct", price: "$19.99", image: "baby-wipes.jpg" },
+            "game-14": { name: "Kirkland Signature Laundry Detergent, 126 loads", price: "$12.99", image: "detergent.jpg" },
+            "game-15": { name: "Kirkland Signature Trash Bags, 200 ct", price: "$17.99", image: "trash-bags.jpg" },
+            "game-16": { name: "Kirkland Signature Paper Towels, 12 rolls", price: "$23.99", image: "paper-towels.jpg" },
+            "game-17": { name: "Kirkland Signature Toilet Paper, 30 rolls", price: "$24.99", image: "toilet-paper.jpg" },
+            "game-18": { name: "Kirkland Signature Chicken Breast, 6 lbs", price: "$29.99", image: "chicken.jpg" },
+            "game-19": { name: "Kirkland Signature Ground Beef, 4 lbs", price: "$21.99", image: "ground-beef.jpg" },
+            "game-20": { name: "Kirkland Signature Salmon Fillets, 3 lbs", price: "$25.99", image: "salmon.jpg" },
+            "game-21": { name: "Kirkland Signature Bacon, 4 lbs", price: "$19.99", image: "bacon.jpg" },
+            "game-22": { name: "Kirkland Signature Eggs, 5 dozen", price: "$12.99", image: "eggs.jpg" },
+            "game-23": { name: "Kirkland Signature Butter, 4 lbs", price: "$15.99", image: "butter.jpg" },
+            "game-24": { name: "Kirkland Signature Cheese, 2 lbs", price: "$9.99", image: "cheese.jpg" },
+            "game-25": { name: "Kirkland Signature Coffee, 3 lbs", price: "$16.99", image: "coffee.jpg" },
+            "game-26": { name: "Kirkland Signature Maple Syrup, 33.8 oz", price: "$12.49", image: "maple-syrup.jpg" },
+            "game-27": { name: "Kirkland Signature Vanilla Extract, 16 oz", price: "$34.99", image: "vanilla.jpg" },
+            "game-28": { name: "Kirkland Signature Protein Bars, 20 ct", price: "$17.99", image: "protein-bars.jpg" },
+            "game-29": { name: "Kirkland Signature Almonds, 3 lbs", price: "$12.99", image: "almonds.jpg" },
+            "game-30": { name: "Kirkland Signature Cashews, 2.5 lbs", price: "$16.99", image: "cashews.jpg" }
+        };
+
+        // Currency formatting
+        function formatCurrency(input, blur) {
+            let input_val = input.value;
+            if (!input_val) return;
+
+            let original_len = input_val.length;
+            let caret_pos = input.selectionStart;
+
+            if (input_val.indexOf(".") >= 0) {
+                let decimal_pos = input_val.indexOf(".");
+                let left_side = input_val.substring(0, decimal_pos);
+                let right_side = input_val.substring(decimal_pos);
+
+                left_side = formatNumber(left_side);
+                right_side = formatNumber(right_side);
+
+                if (blur === "blur") right_side += "00";
+                right_side = right_side.substring(0, 2);
+
+                input_val = left_side + "." + right_side;
+            } else {
+                input_val = formatNumber(input_val);
+                if (blur === "blur") input_val += ".00";
+            }
+
+            input.value = input_val;
+            let updated_len = input_val.length;
+            caret_pos = updated_len - original_len + caret_pos;
+            input.setSelectionRange(caret_pos, caret_pos);
+        }
+
+        function formatNumber(n) {
+            return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Game code
+        (function() {
+            // Global variables
+            let productName;
+            let productPrice;
+            let productImage;
+
+            let shakeTimeout;
+            let toastTimeout;
+            let warningTimeout;
+
+            const costcodleStartDate = new Date("09/21/2023");
+            const gameNumber = getGameNumber();
+
+            const input = document.getElementById("guess-input");
+            const buttonInput = document.getElementById("guess-button");
+
+            const infoButton = document.getElementById("info-button");
+            infoButton.addEventListener("click", switchState);
+
+            const statButton = document.getElementById("stat-button");
+            statButton.addEventListener("click", switchState);
+
+            // In-memory storage instead of localStorage
+            let memoryStorage = {
+                stats: {
+                    numGames: 0,
+                    numWins: 0,
+                    winsInNum: [0, 0, 0, 0, 0, 0],
+                    currentStreak: 0,
+                    maxStreak: 0,
+                },
+                state: {
+                    gameNumber: -1,
+                    guesses: [],
+                    hasWon: false,
+                }
+            };
+
+            const userStats = memoryStorage.stats;
+            const gameState = memoryStorage.state;
+
+            // Currency input formatting
+            input.addEventListener("keyup", function() {
+                formatCurrency(this);
+            });
+            
+            input.addEventListener("blur", function() {
+                formatCurrency(this, "blur");
+            });
+
+            // Start game
+            playGame();
+
+            function playGame() {
+                fetchGameData(getGameNumber());
+            }
+
+            function fetchGameData(gameNumber) {
+                // Use embedded data instead of fetching
+                const maxGames = Object.keys(gameDatabase).length;
+                const actualGameNumber = ((gameNumber - 1) % maxGames) + 1;
+                const gameData = gameDatabase[`game-${actualGameNumber}`];
+                
+                productName = gameData.name;
+                productPrice = gameData.price;
+                productPrice = Number(productPrice.slice(1, productPrice.length));
+                productImage = gameData.image;
+
+                initializeGame();
+            }
+
+            function initializeGame() {
+                if (gameState.gameNumber !== gameNumber) {
+                    if (gameState.hasWon === false) {
+                        userStats.currentStreak = 0;
+                    }
+                    gameState.gameNumber = gameNumber;
+                    gameState.guesses = [];
+                    gameState.hasWon = false;
+                    userStats.numGames++;
+
+                    // Update memory storage
+                    memoryStorage.stats = userStats;
+                    memoryStorage.state = gameState;
+                }
+
+                displayProductCard();
+                updateGameBoard();
+
+                if (gameState.guesses.length < 6 && !gameState.hasWon) {
+                    addEventListeners();
+                } else {
+                    convertToShareButton();
+                }
+            }
+
+            function convertToShareButton() {
+                const containerElem = document.getElementById("input-container");
+                const shareButtonElem = document.createElement("button");
+                shareButtonElem.setAttribute("id", "share-button");
+                containerElem.innerHTML = "";
+                shareButtonElem.innerHTML = `Share <svg class="share-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M48 39.26a8.3 8.3 0 0 0-6.033 2.596L24.23 33.172c.061-.408.103-.821.103-1.246 0-.414-.04-.818-.098-1.215l17.711-8.589A8.302 8.302 0 0 0 48 24.741a8.333 8.333 0 1 0-8.333-8.333c0 .414.04.817.098 1.215l-17.711 8.589A8.3 8.3 0 0 0 16 23.593a8.333 8.333 0 0 0-8.333 8.333A8.332 8.332 0 0 0 16 40.259a8.3 8.3 0 0 0 6.033-2.596l17.737 8.684a8.378 8.378 0 0 0-.103 1.246c0 4.603 3.731 8.333 8.333 8.333s8.333-3.73 8.333-8.333A8.333 8.333 0 0 0 48 39.26z" fill="#ffffff"></path></svg>`;
+                shareButtonElem.addEventListener("click", copyStats);
+                containerElem.appendChild(shareButtonElem);
+            }
+
+            function displayProductCard() {
+                const imageContainer = document.getElementById("image-container");
+                
+                // Create a visual product representation
+                imageContainer.innerHTML = `
+                    <div style="
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(135deg, #0060A9 0%, #E32A36 100%);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        position: relative;
+                        overflow: hidden;
+                    ">
+                        <div style="
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            width: 200%;
+                            height: 200%;
+                            background: repeating-linear-gradient(
+                                45deg,
+                                transparent,
+                                transparent 20px,
+                                rgba(255,255,255,0.05) 20px,
+                                rgba(255,255,255,0.05) 40px
+                            );
+                        "></div>
+                        <div style="
+                            background: white;
+                            padding: 20px;
+                            border-radius: 12px;
+                            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+                            text-align: center;
+                            z-index: 1;
+                        ">
+                            <div style="
+                                font-size: 48px;
+                                font-weight: bold;
+                                background: linear-gradient(45deg, #E32A36, #0060A9);
+                                -webkit-background-clip: text;
+                                -webkit-text-fill-color: transparent;
+                                background-clip: text;
+                                margin-bottom: 10px;
+                            ">KIRKLAND</div>
+                            <div style="
+                                font-size: 24px;
+                                color: #333;
+                                font-style: italic;
+                            ">Signature</div>
+                            <div style="
+                                margin-top: 20px;
+                                font-size: 60px;
+                            ">📦</div>
+                        </div>
+                    </div>
+                `;
+
+                const productInfo = document.getElementById("product-info");
+                productInfo.innerHTML = `<center>${productName}</center>`;
+            }
+
+            function updateGameBoard() {
+                updateGuessStat();
+                gameState.guesses.forEach((guess, index) => displayGuess(guess, index + 1));
+            }
+
+            function updateGuessStat() {
+                const guessStats = document.getElementById("game-stats");
+                if (gameState.hasWon) {
+                    guessStats.innerHTML = `<center>You win! Congratulations!🎉</center>`;
+                    guessStats.innerHTML += `<center>The price was ${productPrice.toFixed(2)}</center>`;
+                    return;
+                }
+
+                if (gameState.guesses.length === 6) {
+                    guessStats.innerHTML = `<center>Better luck next time!</center>`;
+                    guessStats.innerHTML += `<center>The price was ${productPrice.toFixed(2)}</center>`;
+                } else {
+                    guessStats.innerHTML = `Guess: ${gameState.guesses.length + 1}/6`;
+                }
+            }
+
+            function inputEventListener(event) {
+                if (event.key === "Enter") {
+                    handleInput();
+                }
+            }
+
+            function buttonEventListener() {
+                handleInput();
+            }
+
+            function handleInput() {
+                const strippedString = input.value.replaceAll(",", "");
+                const guess = Number(strippedString).toFixed(2);
+
+                if (isNaN(guess) || !strippedString) {
+                    displayWarning();
+                    return;
+                }
+
+                checkGuess(guess);
+                input.value = "";
+
+                function displayWarning() {
+                    clearTimeout(warningTimeout);
+
+                    const warningElem = document.getElementById("warning-toast");
+                    warningElem.classList.remove("hide");
+                    warningElem.classList.add("animate__flipInX");
+
+                    warningTimeout = setTimeout(() => {
+                        warningElem.classList.remove("animate__flipInX");
+                        warningElem.classList.add("animate__flipOutX");
+                        setTimeout(() => {
+                            warningElem.classList.remove("animate__flipOutX");
+                            warningElem.classList.add("hide");
+                        }, 1000);
+                    }, 2000);
+                }
+            }
+
+            function copyStats() {
+                let output = `Costcodle #${gameNumber}`;
+                if (!gameState.hasWon) {
+                    output += ` X/6\n`;
+                } else {
+                    output += ` ${gameState.guesses.length}/6\n`;
+                }
+
+                gameState.guesses.forEach((guess) => {
+                    switch (guess.direction) {
+                        case "↑":
+                            output += `⬆️`;
+                            break;
+                        case "↓":
+                            output += `⬇️`;
+                            break;
+                        case "✓":
+                            output += `✅`;
+                            break;
+                    }
+
+                    switch (guess.closeness) {
+                        case "guess-far":
+                            output += `🟥`;
+                            break;
+                        case "guess-near":
+                            output += `🟨`;
+                            break;
+                    }
+                    output += `\n`;
+                });
+
+                output += `https://costcodle.com`;
+                
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(output).then(() => {
+                        displayToast();
+                    }).catch(err => {
+                        console.error('Failed to copy:', err);
+                        displayToast();
+                    });
+                } else {
+                    displayToast();
+                }
+
+                function displayToast() {
+                    clearTimeout(toastTimeout);
+
+                    const toastElem = document.getElementById("share-toast");
+                    toastElem.classList.remove("hide");
+                    toastElem.classList.add("animate__flipInX");
+
+                    toastTimeout = setTimeout(() => {
+                        toastElem.classList.remove("animate__flipInX");
+                        toastElem.classList.add("animate__flipOutX");
+                        setTimeout(() => {
+                            toastElem.classList.remove("animate__flipOutX");
+                            toastElem.classList.add("hide");
+                        }, 1000);
+                    }, 3000);
+                }
+            }
+
+            function addEventListeners() {
+                input.addEventListener("keydown", inputEventListener);
+                buttonInput.addEventListener("click", buttonEventListener);
+
+                input.addEventListener("focus", () => {
+                    input.setAttribute("placeholder", "0.00");
+                });
+                input.addEventListener("blur", () => {
+                    input.setAttribute("placeholder", "Enter a guess...");
+                });
+            }
+
+            function removeEventListeners() {
+                buttonInput.setAttribute("disabled", "");
+                buttonInput.classList.remove("active");
+                input.setAttribute("disabled", "");
+                input.setAttribute("placeholder", "Game Over!");
+                input.removeEventListener("keydown", inputEventListener);
+                buttonInput.removeEventListener("click", buttonEventListener);
+            }
+
+            function checkGuess(guess) {
+                const guessObj = { guess, closeness: "", direction: "" };
+
+                const percentAway = calculatePercent(guess);
+
+                if (Math.abs(percentAway) <= 5) {
+                    guessObj.closeness = "guess-win";
+                    gameState.hasWon = true;
+                } else {
+                    shakeBox();
+                    if (Math.abs(percentAway) <= 25) {
+                        guessObj.closeness = "guess-near";
+                    } else {
+                        guessObj.closeness = "guess-far";
+                    }
+                }
+
+                if (gameState.hasWon) {
+                    guessObj.direction = "✓";
+                } else if (percentAway < 0) {
+                    guessObj.direction = "↑";
+                } else {
+                    guessObj.direction = "↓";
+                }
+
+                gameState.guesses.push(guessObj);
+                memoryStorage.state = gameState;
+
+                displayGuess(guessObj);
+
+                if (gameState.hasWon) {
+                    gameWon();
+                } else if (gameState.guesses.length === 6) {
+                    gameLost();
+                }
+            }
+
+            function displayGuess(guess, index = gameState.guesses.length) {
+                const guessContainer = document.getElementById(index.toString());
+                const guessValueContainer = document.createElement("div");
+                const infoContainer = document.createElement("div");
+
+                guessValueContainer.classList.add(
+                    "guess-value-container",
+                    "animate__flipInX"
+                );
+
+                infoContainer.classList.add("guess-direction-container", "animate__flipInX");
+
+                guessValueContainer.innerHTML = `${guess.guess}`;
+
+                infoContainer.classList.add(guess.closeness);
+                infoContainer.innerHTML = guess.direction;
+
+                guessContainer.classList.add("animate__flipOutX");
+
+                setTimeout(() => {
+                    guessContainer.classList.add("transparent-background");
+                    guessContainer.appendChild(guessValueContainer);
+                    guessContainer.appendChild(infoContainer);
+                }, 500);
+
+                updateGuessStat();
+            }
+
+            function calculatePercent(guess) {
+                return ((guess * 100) / (productPrice * 100)) * 100 - 100;
+            }
+
+            function gameWon() {
+                userStats.numWins++;
+                userStats.currentStreak++;
+                userStats.winsInNum[gameState.guesses.length - 1]++;
+                if (userStats.currentStreak > userStats.maxStreak) {
+                    userStats.maxStreak = userStats.currentStreak;
+                }
+                gameState.hasWon = true;
+
+                memoryStorage.state = gameState;
+                memoryStorage.stats = userStats;
+                removeEventListeners();
+                convertToShareButton();
+            }
+
+            function gameLost() {
+                userStats.currentStreak = 0;
+                memoryStorage.stats = userStats;
+                removeEventListeners();
+                convertToShareButton();
+            }
+
+            function switchState(event) {
+                const overlayBtnClicked = event.currentTarget.dataset.overlay;
+                const overlayElem = document.getElementById(overlayBtnClicked);
+                const title = document.getElementById("title");
+
+                if (title.classList.contains("info-title")) {
+                    title.classList.remove("info-title");
+                }
+
+                if (overlayElem.style.display === "flex") {
+                    title.innerHTML = `COSTCO<span class="costco-blue">DLE</span>`;
+                    overlayElem.style.display = "none";
+                    return;
+                }
+
+                if (overlayBtnClicked === "info-overlay") {
+                    document.getElementById("stats-overlay").style.display = "none";
+                    renderInfo();
+                } else {
+                    document.getElementById("info-overlay").style.display = "none";
+                    renderStats();
+                }
+
+                function renderInfo() {
+                    title.innerHTML = `HOW TO <span class="costco-blue">PLAY</span>`;
+                    if (!title.classList.contains("info-title")) {
+                        title.classList.add("info-title");
+                    }
+                    overlayElem.style.display = "flex";
+                }
+
+                function renderStats() {
+                    title.innerHTML = `GAME <span class="costco-blue">STATS</span>`;
+
+                    renderStatistics();
+                    graphDistribution();
+
+                    overlayElem.style.display = "flex";
+
+                    function renderStatistics() {
+                        const numWinsElem = document.getElementById("number-wins");
+                        numWinsElem.innerHTML = `${userStats.numGames}`;
+
+                        const winPercentElem = document.getElementById("win-percent");
+                        if (userStats.numGames === 0) {
+                            winPercentElem.innerHTML = `0`;
+                        } else {
+                            winPercentElem.innerHTML = `${Math.round(
+                                (userStats.numWins / userStats.numGames) * 100
+                            )}`;
+                        }
+
+                        const currentStreakElem = document.getElementById("current-streak");
+                        currentStreakElem.innerHTML = `${userStats.currentStreak}`;
+
+                        const maxStreakElem = document.getElementById("max-streak");
+                        maxStreakElem.innerHTML = `${userStats.maxStreak}`;
+                    }
+
+                    function graphDistribution() {
+                        userStats.winsInNum.forEach((value, index) => {
+                            const graphElem = document.getElementById(`graph-${index + 1}`);
+                            if (userStats.numWins === 0) {
+                                graphElem.style = `width: 5%`;
+                            } else {
+                                graphElem.style = `width: ${
+                                    Math.floor((value / userStats.numWins) * 0.95 * 100) + 5
+                                }%`;
+                            }
+                            graphElem.innerHTML = `${value}`;
+                        });
+                    }
+                }
+            }
+
+            function shakeBox() {
+                clearTimeout(shakeTimeout);
+                const infoCard = document.getElementById("info-card");
+                if (infoCard.classList.contains("animate__headShake")) {
+                    infoCard.classList.remove("animate__headShake");
+                }
+                shakeTimeout = setTimeout(
+                    () => infoCard.classList.add("animate__headShake"),
+                    100
+                );
+            }
+
+            function getGameNumber() {
+                const currDate = new Date();
+                let timeDifference = currDate.getTime() - costcodleStartDate.getTime();
+                let dayDifference = timeDifference / (1000 * 3600 * 24);
+                return Math.ceil(dayDifference);
+            }
+        })();
+    </script>
+</body>
+</html>
